@@ -14,9 +14,17 @@ def info_data(data):
 
 def clean_data(data):
     data = data[data['type_vente'] == 'CA']
-    drop_cols = ['ca_ttc', 'ca_ht']
+    data = data.drop(data[(data['frequentation'] == 0.0) & (data['midi_soir'].isnull())].index)
+    drop_cols = ['ca_ttc', 'ca_ht','nb_commandes']
     data = data.drop(drop_cols, axis = 1)
     return data
+
+def clean_meteo(data_meteo):
+    #data_meteo = data_meteo[(data_meteo['heure'] == 12) | (data_meteo['heure'] == 20)]
+    data_meteo = data_meteo[(data_meteo['heure'] == 10) | (data_meteo['heure'] == 12)
+                            | (data_meteo['heure'] == 16) | (data_meteo['heure'] == 20)]
+
+    return data_meteo
 
 
 

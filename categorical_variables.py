@@ -33,6 +33,22 @@ def cate_2_label_encoding():
     return label_X_train, label_X_test
 
 def cate_3_one_hot_encoding():
+    # Get number of unique entries in each column with categorical data
+    object_nunique = list(map(lambda col: X_train[col].nunique(), object_cols))
+    d = dict(zip(object_cols, object_nunique))
+
+    # Print number of unique entries by column, in ascending order
+    print(sorted(d.items(), key=lambda x: x[1]))
+
+    # Columns that will be one-hot encoded
+    low_cardinality_cols = [col for col in object_cols if X_train[col].nunique() < 10]
+
+    # Columns that will be dropped from the dataset
+    high_cardinality_cols = list(set(object_cols) - set(low_cardinality_cols))
+
+    print('Categorical columns that will be one-hot encoded:', low_cardinality_cols)
+    print('\nCategorical columns that will be dropped from the dataset:', high_cardinality_cols)
+
     # Apply one-hot encoder to each column with categorical data
     OH_encoder = OneHotEncoder(handle_unknown='ignore', sparse=False)
     OH_cols_train = pd.DataFrame(OH_encoder.fit_transform(X_train[object_cols].astype('str')))
